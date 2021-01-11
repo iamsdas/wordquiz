@@ -6,18 +6,23 @@
       score: {{ score }}
     </h3>
   </div>
-  <div>
-    <button @click="increaseScore">Add score</button>
-    <button @click="decreaseScore">Decrease score</button>
-  </div>
+  <quiz
+    :word="word"
+    v-on:next-word="getWord()"
+    @add-score="increaseScore"
+    @reduce-score="decreaseScore"
+  />
 </template>
 
 <script>
+import Quiz from "./components/Quiz.vue";
+const randomWords = require("random-words");
 export default {
   name: "App",
-  components: {},
+  components: { Quiz },
   data() {
     return {
+      word: "",
       score: 0,
       highScore: 0
     };
@@ -27,6 +32,7 @@ export default {
       localStorage.storedHighScore = this.highScore;
     }
     this.highScore = localStorage.storedHighScore;
+    this.getWord();
   },
   watch: {
     highScore(newHighScore) {
@@ -42,6 +48,9 @@ export default {
     },
     decreaseScore() {
       this.score -= 150;
+    },
+    getWord() {
+      this.word = randomWords();
     }
   }
 };
